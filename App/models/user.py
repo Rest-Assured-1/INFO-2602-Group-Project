@@ -23,5 +23,5 @@ class User(db.Model):
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
-
+# can you see this comment?
 
