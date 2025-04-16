@@ -25,7 +25,7 @@ class User(db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
     
-    def toJSON(self):
+    def get_json(self):
         return {
             'id': self.id,
             'username': self.username,
