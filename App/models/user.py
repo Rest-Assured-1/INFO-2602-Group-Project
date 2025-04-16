@@ -26,10 +26,9 @@ class User(db.Model):
         return check_password_hash(self.password, password)
     
     def get_json(self):
-        return {
+        return{
             'id': self.id,
-            'username': self.username,
-            'type': self.user_type
+            'username': self.username
         }
 
 
