@@ -7,8 +7,6 @@ class Landlord(User):
 
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
-    apartments = db.relationship('Apartment', backref='landlord', lazy='joined')
-
     __mapper_args__ = {
         'polymorphic_identity': 'landlord',
     }
@@ -78,6 +76,6 @@ class Landlord(User):
         return {
             'id': self.id,
             'username': self.username,
-            'type': 'landlord'
+            'type': 'landlord',
             'listings': [apt.toJSON() for apt in self.apartments]
         }

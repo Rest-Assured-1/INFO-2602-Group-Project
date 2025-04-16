@@ -17,7 +17,7 @@ class Apartment(db.Model):
    
     landlord_id = db.Column(db.Integer, db.ForeignKey('landlord.id'))
 
-    landlord = db.relationship('Landlord', backref=db.backref('apartments', lazy=True))
+    landlord = db.relationship('Landlord', backref=db.backref('apartments', lazy='joined'))
 
     def __repr__(self):
         return f'<Apartment {self.id} {self.title}>'
