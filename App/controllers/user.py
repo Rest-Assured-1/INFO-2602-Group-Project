@@ -1,8 +1,14 @@
-from App.models import User
+from App.models import User, Landlord
 from App.database import db
 
 def create_user(username, password):
     newuser = User(username=username, password=password)
+    db.session.add(newuser)
+    db.session.commit()
+    return newuser
+
+def create_landlord(username, password):
+    newuser = Landlord(username=username, password=password)
     db.session.add(newuser)
     db.session.commit()
     return newuser
@@ -15,6 +21,9 @@ def get_user(id):
 
 def get_all_users():
     return User.query.all()
+
+def get_all_landlords():
+    return Landlord.query.all()
 
 def get_all_users_json():
     users = User.query.all()
