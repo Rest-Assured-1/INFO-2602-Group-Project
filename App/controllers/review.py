@@ -13,6 +13,9 @@ def add_review(apartment_id, rating, content):
         )
         db.session.add(new_review)
         db.session.commit()
+        return new_review
+    return None
+
 
 def get_reviews_for_apartment(apartment_id):
     return Review.query.filter_by(apartment_id=apartment_id).all()
@@ -23,9 +26,14 @@ def update_review(review_id, rating, content):
         review.rating = rating
         review.content = content
         db.session.commit()
+        return review
+    return None
 
 def delete_review(review_id):
     review = Review.query.get(review_id)
     if review and review.tenant_id == current_user.id:
         db.session.delete(review)
         db.session.commit()
+        return True
+    return False
+
