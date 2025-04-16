@@ -1,22 +1,30 @@
 {% extends "layout.html" %}
+
 {% block title %}Flask MVC App{% endblock %}
 {% block page %}Flask MVC App{% endblock %}
-
-
 
 {% block content %}
     <h1>Flask MVC</h1>
     {{ super() }}
     {% if is_authenticated %}
-        <p> Welcome {{current_user.username}} </p>
+        <p> Welcome {{ current_user.username }} </p>
     {% endif %}
-    <p>This is a boileplate flask application which follows the MVC pattern for structuring the project.</p>
+    <p>This is a boilerplate flask application which follows the MVC pattern for structuring the project.</p>
+    
     {% for apartment in apartments %}
-        <div class="apartment">
-            <h2>{{ apartment.name }}</h2>
-            <p>Price: {{ apartment.price }}</p>
-            <p>Location: {{ apartment.city }}</p>
+        <div class="card">
+            <h2>{{ apartment.title }}</h2>
             <p>Description: {{ apartment.body }}</p>
+            <p>Amenities: {{ apartment.amenities }}</p>
+            <div class="card">
+                <div class="card-image">
+                    <img src="{{ apartment.photo }}" alt="Apartment Photo">
+                </div>
+            </div>
+            <p>Pets Allowed: {{ apartment.pets_allowed }}</p>
+            <p>Price: {{ apartment.price }}</p>
+            <p>Address: {{ apartment.address }}</p>
+            <p>Location: {{ apartment.city }}</p>
         </div>
     {% endfor %}
 
