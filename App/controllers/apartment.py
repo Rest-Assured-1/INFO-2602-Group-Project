@@ -21,3 +21,22 @@ def get_apartment_by_id(apartment_id):
 
 def get_all_apartments():
     return Apartment.query.all()
+
+def update_apartment(apartment_id, title, body, amenities, photo, pets_allowed, price, address, cityname):
+    apartment = Apartment.query.get(apartment_id)
+    if apartment:
+        apartment.title = title
+        apartment.body = body
+        apartment.amenities = amenities
+        apartment.photo = photo
+        apartment.pets_allowed = pets_allowed
+        apartment.price = price
+        apartment.address = address
+        apartment.cityname = cityname
+        db.session.commit()
+
+def delete_apartment(apartment_id):
+    apartment = Apartment.query.get(apartment_id)
+    if apartment:
+        db.session.delete(apartment)
+        db.session.commit()
