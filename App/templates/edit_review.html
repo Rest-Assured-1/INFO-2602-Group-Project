@@ -1,0 +1,22 @@
+<!-- edit_review.html -->
+{% extends "layout.html" %}
+
+{% block title %}Edit Review{% endblock %}
+
+{% block content %}
+    <h1>Edit Review for {{ review.apartment.title }}</h1>
+
+    <form method="POST">
+        <div class="input-field">
+            <input type="number" name="rating" id="rating" value="{{ review.rating }}" min="1" max="5" required>
+            <label for="rating">Rating (1 to 5)</label>
+        </div>
+
+        <div class="input-field">
+            <textarea name="comment" id="comment" class="materialize-textarea" required>{{ review.comment }}</textarea>
+            <label for="content">Review Content</label>
+        </div>
+
+        <button type="submit" class="btn green">Update Review</button>
+    </form>
+{% endblock %}
