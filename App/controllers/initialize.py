@@ -15,14 +15,24 @@ def initialize():
             row = {k.strip(): v.strip() for k, v in row.items()}
 
             try:
+                if(row['address']=='null'):
+                    add='call for info'
+                else:
+                    add=row['address']
+                
+                if(row['amenities']=='null'):
+                    am='call for info'
+                else:
+                    am=row['address']
+
                 apartment = Apartment(
                     title=row['title'],
                     body=row['body'],
-                    amenities=row.get('amenities', None),
+                    amenities=am,
                     photo=row.get('photo', None),
                     pets_allowed=row.get('pets_allowed', None),
                     price=float(row['price']),
-                    address=row.get('address', None),
+                    address=add,
                     cityname=row['cityname'],
                     landlord_id=int(row['landlord_id'])  # or however you map landlord
                 )
