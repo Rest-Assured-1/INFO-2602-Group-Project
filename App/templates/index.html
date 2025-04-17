@@ -4,86 +4,47 @@
 {% block page %}Flask MVC App{% endblock %}
 
 {% block content %}
-    <h1>Flask MVC</h1>
-    {{ super() }}
-    {% if is_authenticated %}
-        <p> Welcome {{ current_user.username }} </p>
+<h1>Flask MVC</h1>
+{{ super() }}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="card-panel green lighten-4">{{ message }}</div>
+        {% endfor %}
     {% endif %}
-    <p>This is a boilerplate flask application which follows the MVC pattern for structuring the project.</p>
-    
-    {% for apartment in apartments %}
-        <div class="card">
-            <h2>{{ apartment.title }}</h2>
-            <p>Description: {{ apartment.body }}</p>
-            <p>Amenities: {{ apartment.amenities }}</p>
-            <div class="card">
+{% endwith %}
+
+{% if is_authenticated %}
+    <p>Welcome {{ current_user.username }}</p>
+{% endif %}
+
+<div class="right-align" style="margin-bottom: 20px;">
+    <a href="{{ url_for('apartment_views.new_apartment') }}" class="btn red white-text">+ Add Apartment</a>
+</div>
+
+{% for apartment in apartments %}
+    <div class="card">
+        <div class="card-content">
+            <h5>{{ apartment.title }}</h5>
+            <p><strong>Description:</strong> {{ apartment.body }}</p>
+            <p><strong>Amenities:</strong> {{ apartment.amenities }}</p>
+            {% if apartment.photo %}
                 <div class="card-image">
-                    <img src="{{ url_for('upload_views.uploaded_file', filename=apartment.photo) }}"alt="Apartment Photo" >
-                    
+                    <img src="{{ url_for('upload_views.uploaded_file', filename=apartment.photo) }}" alt="Apartment Photo">
                 </div>
-            </div>
-            <p>Pets Allowed: {{ apartment.pets_allowed }}</p>
-            <p>Price: {{ apartment.price }}</p>
-            <p>Address: {{ apartment.address }}</p>
-            <p>Location: {{ apartment.cityname }}</p>
+            {% endif %}
+            <p><strong>Pets Allowed:</strong> {{ apartment.pets_allowed }}</p>
+            <p><strong>Price:</strong> {{ apartment.price }}</p>
+            <p><strong>Address:</strong> {{ apartment.address }}</p>
+            <p><strong>Location:</strong> {{ apartment.cityname }}</p>
         </div>
-    {% endfor %}
-
-    <form id="add_apartment " method="POST" action="/apartments/new" enctype="multipart/form-data"> 
-        <div class="row">
-
-            <div class="input-field col 12">
-                <input name="title"  id="title"  type="text"  class="validate">               
-                <label for="Apartment name ">Unit name</label>
-            </div>
-
-            <div class="input-field col 12">
-                <input name="body"  id="body"  type="text" class="validate">               
-                <label for="Apartment information ">Description</label>
-            </div>
-
-            <div class="input-field col 12">
-                <input name="amenities" id="amenities"  type="text" class="validate">               
-                <label for="Amenities included ">Amenities</label>
-            </div>
-
-
-            <div class="file-field input-field col 12">
-                <div class="btn">             
-                    <span>Upload image </span>
-                    <input type="file" name="photo" id="photo" accept="image/jpeg,image/jpg,image/png">
-               </div>
-            <div class="file-path-wrapper">
-                <input class="file-path validate" type="text" placeholder="Upload JPG/PNG image">
-            </div>
+        <div class="card-action">
+            <a href="{{ url_for('apartment_views.edit_apartment', id=apartment.id) }}" class="btn blue white-text">Edit</a>
+            <form method="POST" action="{{ url_for('apartment_views.delete_apartment_route', id=apartment.id) }}" style="display:inline;">
+                <button type="submit" class="btn red white-text">Delete</button>
+            </form>
         </div>
-            
-
-            <div class="input-field col 12">
-                <input name="pets_allowed"  id="pets_allowed"  type="text" class="validate">               
-                <label for="Pets">Pets Allowed</label>
-            </div>
-
-            <div class="input-field col 12">
-                <input name="price"  id="price"  type="text" class="validate">               
-                <label for="Apartment cost">Rent per month</label>
-            </div>
-
-            <div class="input-field col 12">
-                <input name="address"  id="address"  type="text" class="validate">               
-                <label for="Location">Address</label>
-            </div>
-
-            <div class="input-field col 12">
-                <input name="cityname"  id="cityname" type="text" class="validate">               
-                <label for="City">City</label>
-            </div>
-            
-        </div>
-            <div class="card-action row" >
-                <input id="addBtn" type="submit" class="red text-white btn" value="Complete" >
-
-            </div>
-    </form>
-
+    </div>
+{% endfor %}
 {% endblock %}

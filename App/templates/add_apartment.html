@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Apartment{% endblock %}
+{% block page %}Add Apartment{% endblock %}
+
+{% block content %}
+<h5>Add New Apartment</h5>
+
+<form id="add_apartment" method="POST" action="/apartments/new" enctype="multipart/form-data">
+    <div class="input-field">
+        <input name="title" id="title" type="text" class="validate" required>
+        <label for="title">Unit Name</label>
+    </div>
+
+    <div class="input-field">
+        <input name="body" id="body" type="text" class="validate" required>
+        <label for="body">Description</label>
+    </div>
+
+    <div class="input-field">
+        <input name="amenities" id="amenities" type="text" class="validate">
+        <label for="amenities">Amenities</label>
+    </div>
+
+    <div class="file-field input-field">
+        <div class="btn">
+            <span>Upload Image</span>
+            <input type="file" name="photo" id="photo" accept="image/jpeg,image/jpg,image/png">
+        </div>
+        <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload JPG/PNG image">
+        </div>
+    </div>
+
+    <div class="input-field">
+        <input name="pets_allowed" id="pets_allowed" type="text" class="validate">
+        <label for="pets_allowed">Pets Allowed</label>
+    </div>
+
+    <div class="input-field">
+        <input name="price" id="price" type="text" class="validate">
+        <label for="price">Rent Per Month</label>
+    </div>
+
+    <div class="input-field">
+        <input name="address" id="address" type="text" class="validate">
+        <label for="address">Address</label>
+    </div>
+
+    <div class="input-field">
+        <input name="cityname" id="cityname" type="text" class="validate">
+        <label for="cityname">City</label>
+    </div>
+
+    <div class="card-action">
+        <button type="submit" class="btn green white-text">Complete</button>
+    </div>
+</form>
+{% endblock %}

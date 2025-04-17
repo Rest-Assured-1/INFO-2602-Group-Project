@@ -1,8 +1,7 @@
-from flask import Blueprint, redirect, render_template, request, send_from_directory, jsonify, url_for, flash
+from flask import Blueprint, redirect, render_template, request, flash, url_for
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from App.database import db
 from App.models.upload import Upload
-
 from App.controllers.apartment import (
     create_apartment,
     get_all_apartments,
@@ -13,36 +12,30 @@ from App.controllers.apartment import (
 
 apartment_views = Blueprint('apartment_views', __name__, template_folder='../templates')
 
+# CREATE Apartment
 @apartment_views.route('/apartments/new', methods=['GET', 'POST'])
 @jwt_required()
-def add_apartment():
+def new_apartment():
     if request.method == 'POST':
         landlord_id = get_jwt_identity()
+        form_data = request.form.to_dict()
+        photo_file = request.files.get('photo')
 
-        form_data=request.form.to_dict()
-
-        photo_file =request.files.get('photo')
-
-        print("PHOTO FILE:", photo_file)
-        print("FILENAME:", photo_file.filename if photo_file else "No file uploaded")
-        
+        # Handle file upload
         if photo_file and photo_file.filename:
-            upload=Upload(photo_file)
-           
+            upload = Upload(photo_file)
             db.session.add(upload)
-
-            #db.session.flush()
-
-            form_data['photo']=upload.filename
+            form_data['photo'] = upload.filename
         else:
-            form_data['photo']=' Image not avaiable '
-        
+            form_data['photo'] = 'Image not available'
+
         create_apartment(form_data, landlord_id)
         flash('Apartment added successfully!')
         return redirect(url_for('index_views.index_page'))
+
     return render_template('add_apartment.html')
 
-
+# UPDATE Apartment
 @apartment_views.route('/apartments/<int:id>/edit', methods=['GET', 'POST'])
 @jwt_required()
 def edit_apartment(id):
@@ -58,7 +51,7 @@ def edit_apartment(id):
 
     return render_template('edit_apartment.html', apartment=apartment)
 
-
+# DELETE Apartment
 @apartment_views.route('/apartments/<int:id>/delete', methods=['POST'])
 @jwt_required()
 def delete_apartment_route(id):
