@@ -18,6 +18,6 @@ def store_file(file):
 
 def remove_file(filename):
   try:
-    os.remove(os.path.join('App/uploads', filename))
+    os.remove(os.path.join('uploads', filename))
   except:
     print('file already Deleted')

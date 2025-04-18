@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, request, flash, url_for
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from App.database import db
 from App.models.upload import Upload
+from App.controllers.upload import remove_file
 from App.controllers.apartment import (
     create_apartment,
     get_all_apartments,
@@ -45,7 +46,25 @@ def edit_apartment(id):
         return redirect(url_for('index_views.index_page'))
 
     if request.method == 'POST':
-        update_apartment(id, request.form)
+        form_data = request.form.to_dict()
+        photo_file = request.files.get('photo')
+
+        if photo_file and photo_file.name:
+
+            if apartment.photo and apartment.photo != 'Image not available':
+                try:
+                   remove_file(apartment.photo) # function defined in upload controller
+                except:
+                    print('Could not delete old photo')
+
+            upload=Upload(photo_file)
+            db.session.add(upload)
+            form_data['photo']=upload.filename # filename is an existing function 
+
+        else:
+            form_data['photo']='file not uploaded in edit' # to be safe
+        
+        update_apartment(id, form_data)
         flash('Apartment updated successfully!')
         return redirect(url_for('index_views.index_page'))
 
