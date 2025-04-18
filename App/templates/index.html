@@ -31,7 +31,7 @@
             <p><strong>Amenities:</strong> {{ apartment.amenities }}</p>
             {% if apartment.photo %}
                 <div class="card-image">
-                    <img src="{{ url_for('upload_views.uploaded_file', filename=apartment.photo) }}" alt="Apartment Photo">
+                    <img src="{{apartment.photo_url}}" alt="Apartment Photo" width="200px" height="450px">
                 </div>
             {% endif %}
             <p><strong>Pets Allowed:</strong> {{ apartment.pets_allowed }}</p>

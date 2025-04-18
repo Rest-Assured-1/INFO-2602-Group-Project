@@ -1,5 +1,6 @@
 from App.models import Apartment
 from App.database import db
+from flask import url_for
 
 def create_apartment(data, landlord_id):
     apartment = Apartment(
@@ -45,3 +46,4 @@ def delete_apartment(apartment_id):
     db.session.delete(apartment)
     db.session.commit()
     return True
+
