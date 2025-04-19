@@ -19,7 +19,7 @@
     <ul class="collection">
       {% for apartment in apartments %}
         <li class="collection-item {% if selected_apartment and apartment.id == selected_apartment.id %}active{% endif %}">
-          <a href="{{ url_for('apartment_views.show_apartments', selected=apartment.id) }}" style="color: inherit;">
+          <a href="{{ url_for('apartment_views.show_apartments', id=apartment.id) }}" style="color: inherit;" class="active">
             {{ apartment.title }} - ${{ apartment.price }}
           </a>
         </li>
@@ -28,7 +28,10 @@
   </div>
 
   <!-- Column 2: Apartment Details + Review -->
+   
   <div class="col m4">
+    <p>Selected Apartment</p>
+    <div id="apartment-details" class="active">
     {% if selected_apartment %}
       <h5>{{ selected_apartment.title }}</h5>
       <p><strong>Price:</strong> ${{ selected_apartment.price }}</p>
@@ -36,9 +39,11 @@
       <p><strong>Description:</strong> {{ selected_apartment.body }}</p>
       <p><strong>Amenities:</strong> {{ selected_apartment.amenities }}</p>
       <p><strong>Pets Allowed:</strong> {{ selected_apartment.pets_allowed }}</p>
-      {% if selected_apartment.photo %}
-        <img src="{{ url_for('static', filename='uploads/' ~ selected_apartment.photo) }}" alt="Apartment Image" style="max-width: 100%;">
+      
+        <img src="{{selected_apartment.photo_url}}" alt="Apartment Image" style="max-width: 100%;">
       {% endif %}
+      </div>
+    </div>
 
       <h6>Reviews</h6>
       {% if reviews %}
@@ -53,28 +58,25 @@
         <p>No reviews yet.</p>
       {% endif %}
 
-      {% if user_id and user_type == 'tenant' %}
+    {% if user_id and user_type == 'tenant' %}
         <h6>Leave a Review</h6>
         <form action="/reviews/{{ selected_apartment.id }}" method="POST">
           <textarea name="content" placeholder="Write your review..." required></textarea>
           <input type="number" name="rating" min="1" max="5" required>
           <button type="submit" class="btn blue">Submit Review</button>
         </form>
-      {% endif %}
+    
     {% else %}
-      <p>Select an apartment to see more details.</p>
+        <p>Select an apartment to see more details.</p>
     {% endif %}
-{% endwith %}
 
-{% if is_authenticated %}
-    <p>Welcome {{ current_user.username }}</p>
-{% endif %}
 
+<!-- 
 <div class="right-align" style="margin-bottom: 20px;">
     <a href="{{ url_for('apartment_views.new_apartment') }}" class="btn red white-text">+ Add Apartment</a>
-</div>
+</div> -->
 
-{% for apartment in apartments %}
+<!-- {% for apartment in apartments %}
     <div class="card">
         <div class="card-content">
             <h5>{{ apartment.title }}</h5>
@@ -82,7 +84,7 @@
             <p><strong>Amenities:</strong> {{ apartment.amenities }}</p>
             {% if apartment.photo %}
                 <div class="card-image">
-                    <img src="{{ url_for('upload_views.uploaded_file', filename=apartment.photo) }}" alt="Apartment Photo">
+                    <img src="{{ apartment.photo_url }}" alt="Apartment Photo">
                 </div>
             {% endif %}
             <p><strong>Pets Allowed:</strong> {{ apartment.pets_allowed }}</p>
@@ -90,7 +92,7 @@
             <p><strong>Address:</strong> {{ apartment.address }}</p>
             <p><strong>Location:</strong> {{ apartment.cityname }}</p>
 
-            <!-- Display reviews link -->
+             Display reviews link 
             <p>
                 <a href="{{ url_for('review_views.view_reviews', apartment_id=apartment.id) }}" class="btn green white-text">
                     View Reviews
@@ -104,5 +106,5 @@
             </form>
         </div>
     </div>
-{% endfor %}
+{% endfor %} -->
 {% endblock %}

@@ -25,12 +25,17 @@ def initialize():
                 else:
                     am=row['amenities']
 
+                if(row['pets_allowed']=='null' or row['pets_allowed']=='None'):
+                    pets='No'
+                else:
+                    pets=row['pets_allowed']
+
                 apartment = Apartment(
                     title=row['title'],
                     body=row['body'],
                     amenities=am,
                     photo=row.get('photo', None),
-                    pets_allowed=row.get('pets_allowed', None),
+                    pets_allowed=pets,
                     price=float(row['price']),
                     address=add,
                     cityname=row['cityname'],

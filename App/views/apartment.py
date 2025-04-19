@@ -97,12 +97,14 @@ def search_apartment_route():
 
       return render_template('search_apartment.html',found=apartments_found)
 
-@apartment_views.route('/', methods=['GET'])
-def show_apartments():
+@apartment_views.route('/apartments/<int:id>', methods=['GET'])
+@jwt_required()
+def show_apartments(id):
     apartments = Apartment.query.all()
 
-    selected_id = request.args.get('selected', type=int)  # <-- grab ?selected=123
-    selected_apartment = Apartment.query.get(selected_id) if selected_id else None
+    selected_apartment = get_apartment_by_id(id)
+    print("selected_id:",id)
+    #selected_apartment = Apartment.query.get(selected_id) if selected_id else None
 
     reviews = []
     if selected_apartment:
