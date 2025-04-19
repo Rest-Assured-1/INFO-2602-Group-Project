@@ -1,5 +1,6 @@
 from App.models import Apartment
 from App.database import db
+from flask import url_for
 
 def create_apartment(data, landlord_id):
     apartment = Apartment(
@@ -45,3 +46,15 @@ def delete_apartment(apartment_id):
     db.session.delete(apartment)
     db.session.commit()
     return True
+
+def search_apartment(data):
+    value=data.get('value','').lower()
+    apartments=None
+    if value!="":
+         apartments=db.session.query(Apartment).filter(db.or_(Apartment.amenities.ilike(f'%{ value }%'), Apartment.cityname.ilike(f'%{value}%' ))).all()
+    else:
+        apartments=Apartment.query
+
+    return apartments
+    
+

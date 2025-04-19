@@ -1,4 +1,5 @@
 from App.database import db
+from flask import url_for
 
 class Apartment(db.Model):
     
@@ -35,3 +36,11 @@ class Apartment(db.Model):
             'cityname': self.cityname,
             'landlord_id': self.landlord_id
         }
+
+    @property # placing this here avoids having to write a view for this and it also requires the field directly 
+    def photo_url(self):
+        if self.photo and (self.photo.startswith('http') or self.photo.startswith('https')):
+            return self.photo
+        elif self.photo:
+            return url_for('upload_views.uploaded_file', filename=self.photo)
+    
