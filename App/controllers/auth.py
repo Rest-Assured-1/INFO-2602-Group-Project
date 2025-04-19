@@ -1,6 +1,24 @@
 from flask_jwt_extended import create_access_token, jwt_required, JWTManager, get_jwt_identity, verify_jwt_in_request
 
 from App.models import User
+from App.models import db
+from App.models.landlord import Landlord
+from App.models.tenant import Tenant
+
+def register_user(username, password, user_type):
+    if User.query.filter_by(username=username).first():
+        return None
+
+    if user_type == 'landlord':
+        user = Landlord(username=username, password=password)
+    elif user_type == 'tenant':
+        user = Tenant(username=username, password=password)
+    else:
+        user = User(username=username, password=password)  # regular user
+
+    db.session.add(user)
+    db.session.commit()
+    return user
 
 def login(username, password):
   user = User.query.filter_by(username=username).first()

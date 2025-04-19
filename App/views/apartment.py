@@ -1,8 +1,9 @@
-from flask import Blueprint, redirect, render_template, request, flash, url_for
+from flask import Blueprint, redirect, render_template, request, flash, url_for, session
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from App.database import db
 from App.models.upload import Upload
 from App.controllers.upload import remove_file
+from App.models import Apartment, Review, User, Landlord, Tenant
 from App.controllers.apartment import (
     create_apartment,
     get_all_apartments,
@@ -79,3 +80,23 @@ def delete_apartment_route(id):
     else:
         flash('Apartment not found.')
     return redirect(url_for('index_views.index_page'))
+
+@apartment_views.route('/', methods=['GET'])
+def show_apartments():
+    apartments = Apartment.query.all()
+
+    selected_id = request.args.get('selected', type=int)  # <-- grab ?selected=123
+    selected_apartment = Apartment.query.get(selected_id) if selected_id else None
+
+    reviews = []
+    if selected_apartment:
+        reviews = Review.query.filter_by(apartment_id=selected_apartment.id).all()
+
+    return render_template(
+        'index.html',
+        apartments=apartments,
+        selected_apartment=selected_apartment,
+        reviews=reviews,
+        user_id=session.get('user_id'),
+        user_type=session.get('user_type')
+    )

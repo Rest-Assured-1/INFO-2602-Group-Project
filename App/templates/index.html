@@ -1,57 +1,118 @@
 {% extends "layout.html" %}
 
-{% block title %}Flask MVC App{% endblock %}
-{% block page %}Flask MVC App{% endblock %}
+{% block title %}Apartments{% endblock %}
+{% block page %}Browse Apartments{% endblock %}
+
+{% block styles %}
+.collection .collection-item.active {
+    background-color: #1565C0;
+    color: white;
+}
+{% endblock %}
 
 {% block content %}
-<h1>Flask MVC</h1>
-{{ super() }}
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="card-panel green lighten-4">{{ message }}</div>
-        {% endfor %}
+<div class="row">
+  <!-- Column 1: Apartment List -->
+  <div class="col m4" style="max-height: 80vh; overflow-y: auto;">
+    <h5>Apartments</h5>
+    <ul class="collection">
+      {% for apartment in apartments %}
+        <li class="collection-item {% if selected_apartment and apartment.id == selected_apartment.id %}active{% endif %}">
+          <a href="{{ url_for('apartment_views.show_apartments', selected=apartment.id) }}" style="color: inherit;">
+            {{ apartment.title }} - ${{ apartment.price }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Column 2: Apartment Details + Review -->
+  <div class="col m4">
+    {% if selected_apartment %}
+      <h5>{{ selected_apartment.title }}</h5>
+      <p><strong>Price:</strong> ${{ selected_apartment.price }}</p>
+      <p><strong>Address:</strong> {{ selected_apartment.address }}, {{ selected_apartment.cityname }}</p>
+      <p><strong>Description:</strong> {{ selected_apartment.body }}</p>
+      <p><strong>Amenities:</strong> {{ selected_apartment.amenities }}</p>
+      <p><strong>Pets Allowed:</strong> {{ selected_apartment.pets_allowed }}</p>
+      {% if selected_apartment.photo %}
+        <img src="{{ url_for('static', filename='uploads/' ~ selected_apartment.photo) }}" alt="Apartment Image" style="max-width: 100%;">
+      {% endif %}
+
+      <h6>Reviews</h6>
+      {% if reviews %}
+        <ul class="collection">
+          {% for review in reviews %}
+            <li class="collection-item">
+              {{ review.content }} - Rating: {{ review.rating }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No reviews yet.</p>
+      {% endif %}
+
+      {% if user_id and user_type == 'tenant' %}
+        <h6>Leave a Review</h6>
+        <form action="/reviews/{{ selected_apartment.id }}" method="POST">
+          <textarea name="content" placeholder="Write your review..." required></textarea>
+          <input type="number" name="rating" min="1" max="5" required>
+          <button type="submit" class="btn blue">Submit Review</button>
+        </form>
+      {% endif %}
+    {% else %}
+      <p>Select an apartment to see more details.</p>
     {% endif %}
-{% endwith %}
+  </div>
 
-{% if is_authenticated %}
-    <p>Welcome {{ current_user.username }}</p>
-{% endif %}
+  <!-- Column 3: Landlord Form -->
+  <div class="col m4">
+    {% if user_id %}
+      {% if user_type == 'landlord' %}
+        <h6>Add New Apartment</h6>
+        <form action="{{ url_for('apartment_views.new_apartment') }}" method="POST" enctype="multipart/form-data">
+          <input type="text" name="title" placeholder="Title" required>
+          <textarea name="body" placeholder="Description" required></textarea>
+          <input type="text" name="amenities" placeholder="Amenities">
+          <input type="file" name="photo">
+          <input type="text" name="pets_allowed" placeholder="Pets Allowed (Yes/No)">
+          <input type="number" name="price" placeholder="Price" step="0.01" required>
+          <input type="text" name="address" placeholder="Address" required>
+          <input type="text" name="cityname" placeholder="City" required>
+          <button type="submit" class="btn green">Add Apartment</button>
+        </form>
 
-<div class="right-align" style="margin-bottom: 20px;">
-    <a href="{{ url_for('apartment_views.new_apartment') }}" class="btn red white-text">+ Add Apartment</a>
+        <h6 class="mt-3">Edit or Delete Listings</h6>
+        <ul class="collection">
+          {% for apartment in apartments if apartment.landlord_id == user_id %}
+            <li class="collection-item">
+              <strong>{{ apartment.title }}</strong>
+              <!-- Edit Form -->
+              <form action="{{ url_for('apartment_views.edit_apartment', id=apartment.id) }}" method="POST" enctype="multipart/form-data">
+                <input type="text" name="title" value="{{ apartment.title }}" required>
+                <textarea name="body" required>{{ apartment.body }}</textarea>
+                <input type="text" name="amenities" value="{{ apartment.amenities }}">
+                <input type="file" name="photo">
+                <input type="text" name="pets_allowed" value="{{ apartment.pets_allowed }}">
+                <input type="number" name="price" value="{{ apartment.price }}" step="0.01" required>
+                <input type="text" name="address" value="{{ apartment.address }}" required>
+                <input type="text" name="cityname" value="{{ apartment.cityname }}" required>
+                <button type="submit" class="btn yellow">Update</button>
+              </form>
+
+              <!-- Delete Form -->
+              <form action="{{ url_for('apartment_views.delete_apartment_route', id=apartment.id) }}" method="POST" style="margin-top:5px;">
+                <button type="submit" class="btn red">Delete</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% else %}
+      <p>Please log in to leave a review or manage listings.</p>
+    {% endif %}
+  </div>
 </div>
 
-{% for apartment in apartments %}
-    <div class="card">
-        <div class="card-content">
-            <h5>{{ apartment.title }}</h5>
-            <p><strong>Description:</strong> {{ apartment.body }}</p>
-            <p><strong>Amenities:</strong> {{ apartment.amenities }}</p>
-            {% if apartment.photo %}
-                <div class="card-image">
-                    <img src="{{ url_for('upload_views.uploaded_file', filename=apartment.photo) }}" alt="Apartment Photo">
-                </div>
-            {% endif %}
-            <p><strong>Pets Allowed:</strong> {{ apartment.pets_allowed }}</p>
-            <p><strong>Price:</strong> {{ apartment.price }}</p>
-            <p><strong>Address:</strong> {{ apartment.address }}</p>
-            <p><strong>Location:</strong> {{ apartment.cityname }}</p>
-
-            <!-- Display reviews link -->
-            <p>
-                <a href="{{ url_for('review_views.view_reviews', apartment_id=apartment.id) }}" class="btn green white-text">
-                    View Reviews
-                </a>
-            </p>
-        </div>
-        <div class="card-action">
-            <a href="{{ url_for('apartment_views.edit_apartment', id=apartment.id) }}" class="btn blue white-text">Edit</a>
-            <form method="POST" action="{{ url_for('apartment_views.delete_apartment_route', id=apartment.id) }}" style="display:inline;">
-                <button type="submit" class="btn red white-text">Delete</button>
-            </form>
-        </div>
-    </div>
-{% endfor %}
 {% endblock %}
