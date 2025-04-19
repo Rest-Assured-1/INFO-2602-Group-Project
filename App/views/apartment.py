@@ -76,7 +76,12 @@ def edit_apartment(id):
 @apartment_views.route('/apartments/<int:id>/delete', methods=['POST'])
 @jwt_required()
 def delete_apartment_route(id):
-    if delete_apartment(id):
+    review=Review.query.filter_by(apartment_id=id).all()
+
+    for rev in review:
+        db.session.delete(rev)
+
+    if  delete_apartment(id):
         flash('Apartment deleted.')
     else:
         flash('Apartment not found.')
@@ -130,7 +135,7 @@ def show_apartments(id):
     if selected_apartment:
         reviews = Review.query.filter_by(apartment_id=selected_apartment.id).all()
 
-    # ✅ Added this block to fetch reviews written by the logged-in tenant
+   
     user_reviews = []
     if session.get('user_id') and session.get('user_type') == 'tenant':
         user_reviews = Review.query.filter_by(tenant_id=session.get('user_id')).all()
@@ -142,5 +147,5 @@ def show_apartments(id):
         reviews=reviews,
         user_id=session.get('user_id'),
         user_type=session.get('user_type'),
-        user_reviews=user_reviews  # ✅ Added to pass tenant's own reviews
+        user_reviews=user_reviews  
     )

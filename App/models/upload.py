@@ -8,7 +8,7 @@ from App.controllers.upload import store_file, remove_file
 
 class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(200),db.ForeignKey('apartment.photo'), nullable=True)
+    filename = db.Column(db.String(200), nullable=True)
 
     def __init__(self, file):
       self.filename = store_file(file)
