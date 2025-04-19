@@ -8,7 +8,8 @@ from App.controllers.apartment import (
     get_all_apartments,
     get_apartment_by_id,
     update_apartment,
-    delete_apartment
+    delete_apartment,
+    search_apartment
 )
 
 apartment_views = Blueprint('apartment_views', __name__, template_folder='../templates')
@@ -79,3 +80,18 @@ def delete_apartment_route(id):
     else:
         flash('Apartment not found.')
     return redirect(url_for('index_views.index_page'))
+
+#SEARCH BY LOCATION OR AMENITIES
+@apartment_views.route('/apartments/search' , methods=['GET'])
+@jwt_required()
+def search_apartment_route():
+   
+      data=request.args
+      apartments_found=search_apartment(data)
+
+      if(apartments_found):
+          flash('Here is what we got ! ')
+      else:
+            flash('No apartments found.')
+
+      return render_template('search_apartment.html',found=apartments_found)

@@ -19,9 +19,16 @@
     <p>Welcome {{ current_user.username }}</p>
 {% endif %}
 
+
 <div class="right-align" style="margin-bottom: 20px;">
     <a href="{{ url_for('apartment_views.new_apartment') }}" class="btn red white-text">+ Add Apartment</a>
 </div>
+
+<div class="center-align" style="margin-top: 20px;">
+    <a href="{{ url_for('apartment_views.search_apartment_route') }}" class="btn blue">
+      Search Apartments
+    </a>
+  </div>
 
 {% for apartment in apartments %}
     <div class="card">

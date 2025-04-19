@@ -23,7 +23,7 @@ def initialize():
                 if(row['amenities']=='null'):
                     am='call for info'
                 else:
-                    am=row['address']
+                    am=row['amenities']
 
                 apartment = Apartment(
                     title=row['title'],

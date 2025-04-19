@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}Search Apartment{% endblock %}
+{% block page %}Search Apartment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h4>Search  Apartments</h4>
+    <form method="GET" action="/apartments/search" >
+        <div class="row">
+            <div class="input-field col s10">
+              <input id="value" type="text" name="value" placeholder="Search by city or amenities" required>
+            </div>
+            <div class="input-field col s2">
+              <button type="submit" class="btn waves-effect waves-light">Search</button>
+            </div>
+          </div>
+    </form>
+
+    <h5>Search Results </h5>
+
+{% if found %}
+    {% for apartment in found %}
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">{{ apartment.title }}</span>
+                <p>{{ apartment.cityname }} - {{apartment.amenities}}</p>
+                <img src="{{apartment.photo_url}}" alt="Apartment Photo" width="600px" height="450px">
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No apartments found matching your search.</p>
+{% endif %}
+
+{% endblock %}
