@@ -81,7 +81,7 @@ def delete_apartment_route(id):
         flash('Apartment not found.')
     return redirect(url_for('index_views.index_page'))
 
-#SEARCH BY LOCATION OR AMENITIES
+#SEARCH BY LOCATION OR AMENITIES * testing 
 @apartment_views.route('/apartments/search' , methods=['GET'])
 @jwt_required()
 def search_apartment_route():
