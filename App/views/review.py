@@ -32,13 +32,13 @@ def add_review(apartment_id):
         comment = request.form.get('comment')
 
         if rating and comment:
-            create_review(apartment_id, rating, comment, tenant_id)
+            review = create_review(apartment_id, rating, comment, tenant_id)
             flash('Review added successfully!', 'success')
-            return redirect(url_for('review_views.view_reviews', apartment_id=apartment.id))
+            return redirect(url_for('apartment_views.show_apartments', id=apartment_id))
         else:
             flash('Please provide both rating and comment!', 'error')
 
-    return render_template('add_review.html', apartment=apartment)
+    return redirect(url_for('apartment_views.show_apartments', id=apartment_id))
 
 
 @review_views.route('/reviews/<int:review_id>/edit', methods=['GET', 'POST'])
@@ -50,13 +50,13 @@ def edit_review(review_id):
         rating = request.form.get('rating')
         comment = request.form.get('comment')
         if rating and comment:
-            update_review(review_id, rating, comment)
+            review = update_review(review_id, rating, comment)
             flash('Review updated successfully!', 'success')
-            return redirect(url_for('review_views.view_reviews', apartment_id=review.apartment_id))
+            return redirect(url_for('apartment_views.show_apartments', id=review.apartment_id))
         else:
             flash('Please provide both rating and comment!', 'error')
 
-    return render_template('edit_review.html', review=review)
+    return redirect(url_for('apartment_views.show_apartments', id=review.apartment_id))
 
 
 @review_views.route('/reviews/<int:review_id>/delete', methods=['POST'])
@@ -66,4 +66,4 @@ def delete_review_route(review_id):
 
     delete_review(review_id)
     flash('Review deleted successfully!', 'success')
-    return redirect(url_for('review_views.view_reviews', apartment_id=review.apartment_id))
+    return redirect(url_for('apartment_views.show_apartments', id=review.apartment_id))

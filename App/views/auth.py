@@ -34,6 +34,7 @@ def login_action():
 
     if not token:
         flash('Bad username or password given')
+        return render_template('login.html')
     else:
         flash('Login Successful')
         set_access_cookies(response, token)

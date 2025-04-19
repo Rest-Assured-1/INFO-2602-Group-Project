@@ -97,18 +97,43 @@ def search_apartment_route():
 
       return render_template('search_apartment.html',found=apartments_found)
 
+# @apartment_views.route('/apartments/<int:id>', methods=['GET'])
+# @jwt_required()
+# def show_apartments(id):
+#     apartments = Apartment.query.all()
+
+#     selected_apartment = get_apartment_by_id(id)
+#     print("selected_id:",id)
+#     #selected_apartment = Apartment.query.get(selected_id) if selected_id else None
+
+#     reviews = []
+#     if selected_apartment:
+#         reviews = Review.query.filter_by(apartment_id=selected_apartment.id).all()
+
+#     return render_template(
+#         'index.html',
+#         apartments=apartments,
+#         selected_apartment=selected_apartment,
+#         reviews=reviews,
+#         user_id=session.get('user_id'),
+#         user_type=session.get('user_type')
+#     )
 @apartment_views.route('/apartments/<int:id>', methods=['GET'])
 @jwt_required()
 def show_apartments(id):
     apartments = Apartment.query.all()
 
     selected_apartment = get_apartment_by_id(id)
-    print("selected_id:",id)
-    #selected_apartment = Apartment.query.get(selected_id) if selected_id else None
+    print("selected_id:", id)
 
     reviews = []
     if selected_apartment:
         reviews = Review.query.filter_by(apartment_id=selected_apartment.id).all()
+
+    # ✅ Added this block to fetch reviews written by the logged-in tenant
+    user_reviews = []
+    if session.get('user_id') and session.get('user_type') == 'tenant':
+        user_reviews = Review.query.filter_by(tenant_id=session.get('user_id')).all()
 
     return render_template(
         'index.html',
@@ -116,5 +141,6 @@ def show_apartments(id):
         selected_apartment=selected_apartment,
         reviews=reviews,
         user_id=session.get('user_id'),
-        user_type=session.get('user_type')
+        user_type=session.get('user_type'),
+        user_reviews=user_reviews  # ✅ Added to pass tenant's own reviews
     )
