@@ -1,4 +1,4 @@
-from .user import create_user, create_landlord
+from .user import create_user, create_landlord, create_tenant
 from App.models import Apartment, Landlord
 from App.database import db
 import csv
@@ -19,8 +19,9 @@ def initialize():
     create_landlord('landlord6', 'landlord6pass')
     create_landlord('landlord7', 'landlord7pass')
     create_landlord('landlord8', 'landlord8pass')
-    create_landlord('landlord9', 'landlord9pass')
-    create_landlord('landlord10', 'landlord10pass')
+
+    create_tenant('tony', 'tonypass')
+    create_tenant('tina', 'tinapass')
 
     with open('apartment.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile, delimiter=';')

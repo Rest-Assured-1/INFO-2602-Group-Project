@@ -1,4 +1,4 @@
-from App.models import User, Landlord
+from App.models import User, Landlord, Tenant
 from App.database import db
 
 def create_user(username, password):
@@ -9,6 +9,12 @@ def create_user(username, password):
 
 def create_landlord(username, password):
     newuser = Landlord(username=username, password=password)
+    db.session.add(newuser)
+    db.session.commit()
+    return newuser
+
+def create_tenant(username, password):
+    newuser = Tenant(username=username, password=password)
     db.session.add(newuser)
     db.session.commit()
     return newuser
