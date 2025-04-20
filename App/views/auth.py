@@ -20,7 +20,7 @@ def identify_page():
     return render_template('message.html', title="Identify", message=f"You are logged in as {current_user.id} - {current_user.username}")
 
 
-@auth_views.route('/login', methods=['GET', 'POST'])
+@auth_views.route('/', methods=['GET', 'POST'])
 def login_action():
     if request.method == 'GET':
         return render_template('login.html')
@@ -30,7 +30,7 @@ def login_action():
     password = data['password']
 
     token = login(username, password)
-    response = redirect('/')
+    response = redirect('/app')
 
     if not token:
         flash('Bad username or password given')
