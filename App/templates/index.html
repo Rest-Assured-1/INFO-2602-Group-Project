@@ -45,6 +45,8 @@
       <img src="{{ selected_apartment.photo_url }}" alt="Apartment Image" style="max-width: 100%;">
       {% endif %}
 
+    
+
       <h6>Reviews</h6>
       {% if reviews %}
         <ul class="collection">
@@ -159,5 +161,50 @@
     {% endif %}
   </div>
 </div>
+
+
+
+
+
+
+<!---------------------------------->
+<div class="conatiner">
+  <h4>Search  Apartments</h4>
+  <form method="GET" action="/apartments/search" >
+      <div class="row">
+          <div class="input-field col s8">
+            <input id="value" type="text" name="value" placeholder="Search by city or amenities" required>
+          </div>
+          <div class="input-field col s2">
+            <button type="submit" class="btn waves-effect waves-light">Search</button>
+          </div>
+        </div>
+  </form>
+
+  <h5>Search Results </h5>
+  </div>
+
+
+
+    <section class="col s12 m12 l12" style="overflow-y:scroll; height: 50vh">
+      <div class="row">
+
+          {% if found %}
+            {% for apartment in found %}
+            <div class="col s12 m3 l4">
+              <div class="card">
+                <h5>{{ apartment.title }}</h5>
+                <p>{{ apartment.cityname }} - {{apartment.amenities}}</p>
+                <!-- <img src="{{apartment.photo_url}}" alt="Apartment Photo" width="600px" height="450px"> -->
+            </div>
+          </div>
+            {% endfor %}
+          {% else %}
+            <p>No apartments found matching your search.</p>
+          {% endif %}
+          </div>
+          </section>
+  
+
 
 {% endblock %}

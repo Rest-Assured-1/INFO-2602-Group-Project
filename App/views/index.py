@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, request, send_from_direc
 from App.controllers import create_user, initialize
 from App.controllers.apartment import get_all_apartments
 from App.models import Apartment, Landlord, Tenant, Review
+from App.controllers.apartment import search_apartment
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
@@ -13,6 +14,12 @@ def home():
     if not user_id or not user_type:
         return redirect('/')  # redirect to login if not authenticated
 
+    search_value = request.args.get('search')
+    if search_value:
+        found = search_apartment({'value': search_value})
+    else:
+        found = None
+    
     apartments = Apartment.query.all()  # for the main list in column 1
 
     user_apartments = []
@@ -31,12 +38,17 @@ def home():
     return render_template(
         'index.html',
         apartments=apartments,
+        found=found,
         user_id=user_id,
         user_type=user_type,
         user_apartments=user_apartments,
         user_reviews=user_reviews
     )
  
+
+
+
+
 
 @index_views.route('/init', methods=['GET'])
 def init():

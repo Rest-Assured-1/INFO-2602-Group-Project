@@ -54,7 +54,6 @@ def search_apartment(data):
          apartments=db.session.query(Apartment).filter(db.or_(Apartment.amenities.ilike(f'%{ value }%'), Apartment.cityname.ilike(f'%{value}%' ))).all()
     else:
         apartments=Apartment.query
-
     return apartments
     
 

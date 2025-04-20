@@ -91,16 +91,8 @@ def delete_apartment_route(id):
 @apartment_views.route('/apartments/search' , methods=['GET'])
 @jwt_required()
 def search_apartment_route():
-   
-      data=request.args
-      apartments_found=search_apartment(data)
-
-      if(apartments_found):
-          flash('Here is what we got ! ')
-      else:
-            flash('No apartments found.')
-
-      return render_template('search_apartment.html',found=apartments_found)
+      search_value=request.args.get('value')
+      return redirect(url_for('index_views.index_page',search=search_value))
 
 # @apartment_views.route('/apartments/<int:id>', methods=['GET'])
 # @jwt_required()
