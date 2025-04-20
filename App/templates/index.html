@@ -17,7 +17,7 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row" >
   <!-- Column 1: Apartment List -->
   <div class="col m4" style="max-height: 80vh; overflow-y: auto;">
     <h5>Apartments</h5>
@@ -64,7 +64,11 @@
       <h6>Leave a Review</h6>
       <form action="{{ url_for('review_views.add_review', apartment_id=selected_apartment.id) }}" method="POST">
         <textarea name="comment" placeholder="Write your review..." required></textarea>
-        <input type="number" name="rating" min="1" max="5" placeholder="Rating" required>
+        
+        <p class="range-field">
+          <input type="range" name="rating" min="1" max="5" placeholder="Rating" required>
+        </p>
+
         <button type="submit" class="btn blue">Submit Review</button>
       </form>
       {% endif %}
@@ -192,18 +196,18 @@
           {% if found %}
             {% for apartment in found %}
             <div class="col s12 m3 l4">
-              <div class="card">
-                <h5>{{ apartment.title }}</h5>
+              <div class="card" style="font-size:medium">
+                <h6>{{ apartment.title }}</h6>
                 <p>{{ apartment.cityname }} - {{apartment.amenities}}</p>
                 <!-- <img src="{{apartment.photo_url}}" alt="Apartment Photo" width="600px" height="450px"> -->
             </div>
           </div>
             {% endfor %}
           {% else %}
-            <p>No apartments found matching your search.</p>
+              <p style="text-align: center; background-color:rgb(255, 205, 205) ; font-family:Georgia; font-size:large " >No apartments found matching your search.</p>
           {% endif %}
-          </div>
-          </section>
+      </div>
+    </section>
   
 
 
