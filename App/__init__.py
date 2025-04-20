@@ -1,6 +1,8 @@
+import os
 from flask import Flask
-from .models import db  # assuming you use SQLAlchemy
-from .views import apartment_views  # Import from views/__init__.py
+from .config import load_config
+from .models import db  
+from .views import apartment_views
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
@@ -8,9 +10,9 @@ def create_app():
     app = Flask(__name__)
     
     # Config settings here (replace with actual config or config object)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yourdb.sqlite3'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///yourdb.sqlite3')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = 'your-secret-key'
+    app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key')
 
     db.init_app(app)
 
