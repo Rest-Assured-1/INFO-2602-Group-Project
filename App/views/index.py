@@ -5,22 +5,25 @@ from App.models import Apartment, Landlord, Tenant, Review
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
-@index_views.route('/', endpoint='index_page')
+@index_views.route('/app', endpoint='index_page')
 def home():
     user_id = session.get('user_id')
     user_type = session.get('user_type')
-    
+
+    if not user_id or not user_type:
+        return redirect('/')  # redirect to login if not authenticated
+
     apartments = Apartment.query.all()  # for the main list in column 1
 
     user_apartments = []
     user_reviews = []
 
-    if user_id and user_type == 'landlord':
+    if user_type == 'landlord':
         landlord = Landlord.query.get(user_id)
         if landlord:
             user_apartments = landlord.apartments
 
-    elif user_id and user_type == 'tenant':
+    elif user_type == 'tenant':
         tenant = Tenant.query.get(user_id)
         if tenant:
             user_reviews = tenant.reviews
@@ -30,9 +33,10 @@ def home():
         apartments=apartments,
         user_id=user_id,
         user_type=user_type,
-        user_apartments=user_apartments,  # for editing/deleting
-        user_reviews=user_reviews         # for editing/deleting
+        user_apartments=user_apartments,
+        user_reviews=user_reviews
     )
+ 
 
 @index_views.route('/init', methods=['GET'])
 def init():
