@@ -91,9 +91,13 @@ def delete_apartment_route(id):
 @apartment_views.route('/apartments/search' , methods=['GET'])
 @jwt_required()
 def search_apartment_route():
-      search_value=request.args.get('value')
+      search_value=request.args
+      if(search_value):
+        found=search_apartment(search_value)
+      else:
+          found=None
       
-      return redirect(url_for('index_views.index_page',search=search_value))
+      return render_template('index.html',found=found)
 
 # @apartment_views.route('/apartments/<int:id>', methods=['GET'])
 # @jwt_required()
@@ -121,6 +125,7 @@ def search_apartment_route():
 def show_apartments(id):
     apartments = Apartment.query.all()
 
+
     selected_apartment = get_apartment_by_id(id)
     print("selected_id:", id)
 
@@ -140,5 +145,5 @@ def show_apartments(id):
         reviews=reviews,
         user_id=session.get('user_id'),
         user_type=session.get('user_type'),
-        user_reviews=user_reviews  
+        user_reviews=user_reviews 
     )

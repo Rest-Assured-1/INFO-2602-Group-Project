@@ -14,11 +14,7 @@ def home():
     if not user_id or not user_type:
         return redirect('/')  # redirect to login if not authenticated
 
-    search_value = request.args.get('search')
-    if search_value:
-        found = search_apartment({'value': search_value})
-    else:
-        found = None
+    
     
     apartments = Apartment.query.all()  # for the main list in column 1
 
@@ -38,7 +34,6 @@ def home():
     return render_template(
         'index.html',
         apartments=apartments,
-        found=found,
         user_id=user_id,
         user_type=user_type,
         user_apartments=user_apartments,
