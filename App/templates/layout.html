@@ -19,17 +19,21 @@
               <a href="#!" class="brand-logo center">{% block page %}{% endblock %}</a>
               <ul id="nav-mobile" class="left">
                   <li><a href="/app">Home</a></li>
-                  <li><a href="/users">Users Jinja</a></li>
+                </ul>
+                  <!-- <li><a href="/users">Users Jinja</a></li>
                   {% if is_authenticated %}
                     <li><a href="/identify">Identify</a></li>
                   {% endif %}
-                  <li><a href="/static/users">Users JS</a></li>
-              </ul>
+                  <li><a href="/static/users">Users JS</a></li>-->
+              
               {% if is_authenticated %}
               <ul id="nav-mobile" class="right">
                 <li><a href="/logout">Logout</a></li>
               </ul>
-              {% else %}
+              {% endif %}
+          </div>
+        </nav>
+              <!--
               <form class="right navbar-form" method="POST" action="/" style="display: flex; flex-wrap: nowrap; align-items: center; margin-right: 10px;">
                   <div class="input-field" style="margin-right: 10px;">
                       <input placeholder="username" value="bob" name="username" type="text" class="validate" required>
@@ -40,18 +44,18 @@
                       <label for="password">Password</label>
                   </div>
                   <button type="submit" class="btn waves-effect waves-light">Login</button>
-              </form>
-              {% endif %}
+              </form> -->
+             
               
-          </div>
-      </nav>
+        
+      
       <style>
           .navbar-form label {
               color: white !important;
           }
       </style>
 
-    <div class="container" id="content">{% block content %}{% endblock %}</div>
+    <div class="container" style="margin-left: 0px; margin-right:0px; " id="content">{% block content %}{% endblock %}</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>

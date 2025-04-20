@@ -92,6 +92,7 @@ def delete_apartment_route(id):
 @jwt_required()
 def search_apartment_route():
       search_value=request.args.get('value')
+      
       return redirect(url_for('index_views.index_page',search=search_value))
 
 # @apartment_views.route('/apartments/<int:id>', methods=['GET'])

@@ -7,7 +7,8 @@
 .collection .collection-item.active {
     background-color: #1565C0;
     color: white;
-}
+   
+} 
 .scrollable-container {
   max-height: 70vh;
   overflow-y: auto;
@@ -17,12 +18,15 @@
 
 {% block content %}
 
+
+
+
 <div class="row" >
   <!-- Column 1: Apartment List -->
-  <div class="col m4" style="max-height: 80vh; overflow-y: auto;">
-    <h5>Apartments</h5>
+  <div class="col m3" style="max-height: 80vh; overflow-y: auto;">
+    <h5>{% if found %}Search Results{% else %}Apartments{% endif %}</h5>
     <ul class="collection">
-      {% for apartment in apartments %}
+      {% for apartment in found or apartments %}
         <li class="collection-item {% if selected_apartment and apartment.id == selected_apartment.id %}active{% endif %}">
           <a href="{{ url_for('apartment_views.show_apartments', id=apartment.id) }}" style="color: inherit;">
             {{ apartment.title }} - ${{ apartment.price }}
@@ -33,7 +37,7 @@
   </div>
 
   <!-- Column 2: Apartment Details + Review -->
-  <div class="col m4">
+  <div class="col m3">
     {% if selected_apartment %}
       <h5>{{ selected_apartment.title }}</h5>
       <p><strong>Price:</strong> ${{ selected_apartment.price }}</p>
@@ -45,126 +49,149 @@
       <img src="{{ selected_apartment.photo_url }}" alt="Apartment Image" style="max-width: 100%;">
       {% endif %}
 
-    
-
-      <h6>Reviews</h6>
-      {% if reviews %}
-        <ul class="collection">
-          {% for review in reviews %}
-            <li class="collection-item">
-              {{ review.comment }} - Rating: {{ review.rating }}
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p>No reviews yet.</p>
-      {% endif %}
-
-      {% if user_id and user_type == 'tenant' %}
-      <h6>Leave a Review</h6>
-      <form action="{{ url_for('review_views.add_review', apartment_id=selected_apartment.id) }}" method="POST">
-        <textarea name="comment" placeholder="Write your review..." required></textarea>
-        
-        <p class="range-field">
-          <input type="range" name="rating" min="1" max="5" placeholder="Rating" required>
-        </p>
-
-        <button type="submit" class="btn blue">Submit Review</button>
-      </form>
-      {% endif %}
     {% else %}
       <p>Select an apartment to see more details.</p>
     {% endif %}
   </div>
 
+
+
+
+  <div class="col m5>">
+    <h6>Reviews</h6>
+    {%if selected_apartment %}
+          {% if reviews %}
+                <ul class="collection">
+                  {% for review in reviews %}
+                    <li class="collection-item">
+                      {{ review.comment }} - Rating: {{ review.rating }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p>No reviews yet.</p>
+              {% endif %}
+
+              {% if user_id and user_type == 'tenant' %}
+              <h6>Leave a Review</h6>
+              <form action="{{ url_for('review_views.add_review', apartment_id=selected_apartment.id) }}" method="POST">
+                <textarea name="comment" placeholder="Write your review..." required></textarea>
+                
+                <p class="range-field">
+                  <input type="range" name="rating" min="1" max="5" placeholder="Rating" required>
+                </p>
+
+                <button type="submit" class="btn blue">Submit Review</button>
+              </form>
+          {% endif %}
+        {%else%}
+        <p>Reviews will show up here</p>
+        {%endif%}
+    </div>
+
+
+
+
+   
   <!-- Column 3: Landlord or Tenant Info (Always Visible) -->
-  <div class="col m4" style="max-height: 80vh; overflow-y: auto;">
-    {% if user_id %}
-      {% if user_type == 'landlord' %}
-        <!-- Form to Add New Apartment - placed outside the scrollable collection -->
-        <h6>Add New Apartment</h6>
-        <form action="{{ url_for('apartment_views.new_apartment') }}" method="POST" enctype="multipart/form-data">
-          <input type="text" name="title" placeholder="Title" required>
-          <textarea name="body" placeholder="Description" required></textarea>
-          <input type="text" name="amenities" placeholder="Amenities">
-          <input type="file" name="photo">
-          <input type="text" name="pets_allowed" placeholder="Pets Allowed (Yes/No)">
-          <input type="number" name="price" placeholder="Price" step="0.01" required>
-          <input type="text" name="address" placeholder="Address" required>
-          <input type="text" name="cityname" placeholder="City" required>
-          <button type="submit" class="btn green">Add Apartment</button>
-        </form>
 
-        <!-- Scrollable collection for landlord's listings -->
-        <h6 class="mt-3">Edit or Delete Listings</h6>
-        <div class="scrollable-container">
-          {% if apartments %}
-            <ul class="collection">
-              {% for apartment in apartments if apartment.landlord_id == user_id %}
-                <li class="collection-item">
-                  <strong>{{ apartment.title }}</strong>
-                  <!-- Edit Form -->
-                  <form action="{{ url_for('apartment_views.edit_apartment', id=apartment.id) }}" method="POST" enctype="multipart/form-data">
-                    <input type="text" name="title" value="{{ apartment.title }}" required>
-                    <textarea name="body" required>{{ apartment.body }}</textarea>
-                    <input type="text" name="amenities" value="{{ apartment.amenities }}">
-                    <input type="file" name="photo">
-                    <input type="text" name="pets_allowed" value="{{ apartment.pets_allowed }}">
-                    <input type="number" name="price" value="{{ apartment.price }}" step="0.01" required>
-                    <input type="text" name="address" value="{{ apartment.address }}" required>
-                    <input type="text" name="cityname" value="{{ apartment.cityname }}" required>
-                    <button type="submit" class="btn yellow">Update</button>
-                  </form>
+<div class="row>">
+  <div class="col m3" style="max-height: 80vh; overflow-y: auto;">
+        {% if user_id %}
+            {% if user_type == 'landlord' %}
+              <!-- Form to Add New Apartment - placed outside the scrollable collection -->
+              <h6>Add New Apartment</h6>
+              <form action="{{ url_for('apartment_views.new_apartment') }}" method="POST" enctype="multipart/form-data">
+                <input type="text" name="title" placeholder="Title" required>
+                <textarea name="body" placeholder="Description" required></textarea>
+                <input type="text" name="amenities" placeholder="Amenities">
+                <input type="file" name="photo">
+                <input type="text" name="pets_allowed" placeholder="Pets Allowed (Yes/No)">
+                <input type="number" name="price" placeholder="Price" step="0.01" required>
+                <input type="text" name="address" placeholder="Address" required>
+                <input type="text" name="cityname" placeholder="City" required>
+                <button type="submit" class="btn green">Add Apartment</button>
+              </form>
 
-                  <!-- Delete Form -->
-                  <form action="{{ url_for('apartment_views.delete_apartment_route', id=apartment.id) }}" method="POST" style="margin-top:5px;">
-                    <button type="submit" class="btn red">Delete</button>
-                  </form>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <p>You haven't added any listings yet.</p>
+              <!-- Scrollable collection for landlord's listings -->
+              <h6 class="mt-3">Edit or Delete Listings</h6>
+              <div class="scrollable-container">
+                {% if apartments %}
+                  <ul class="collection">
+                    {% for apartment in apartments if apartment.landlord_id == user_id %}
+                      <li class="collection-item">
+                        <strong>{{ apartment.title }}</strong>
+                        <!-- Edit Form -->
+                        <form action="{{ url_for('apartment_views.edit_apartment', id=apartment.id) }}" method="POST" enctype="multipart/form-data">
+                          <input type="text" name="title" value="{{ apartment.title }}" required>
+                          <textarea name="body" required>{{ apartment.body }}</textarea>
+                          <input type="text" name="amenities" value="{{ apartment.amenities }}">
+                          <input type="file" name="photo">
+                          <input type="text" name="pets_allowed" value="{{ apartment.pets_allowed }}">
+                          <input type="number" name="price" value="{{ apartment.price }}" step="0.01" required>
+                          <input type="text" name="address" value="{{ apartment.address }}" required>
+                          <input type="text" name="cityname" value="{{ apartment.cityname }}" required>
+                          <button type="submit" class="btn yellow">Update</button>
+                        </form>
+
+                        <!-- Delete Form -->
+                        <form action="{{ url_for('apartment_views.delete_apartment_route', id=apartment.id) }}" method="POST" style="margin-top:5px;">
+                          <button type="submit" class="btn red">Delete</button>
+                        </form>
+                      </li>
+                    {% endfor %}
+                  </ul>
+               {% else %}
+                  <p>You haven't added any listings yet.</p>
           {% endif %}
-        </div>
-      {% elif user_type == 'tenant' %}
-        <!-- Tenant Reviews Section -->
-        <h6>Your Reviews</h6>
-        <div class="scrollable-container">
-          {% if user_reviews %}
-            <ul class="collection">
-              {% for review in user_reviews %}
-                <li class="collection-item">
-                  <strong>Apartment:</strong> {{ review.apartment.title }}<br>
+          </div> <!--nds div for scrollable comtainer for landlord listings -->
 
-                  <!-- Edit Form -->
-                  <form action="{{ url_for('review_views.edit_review', review_id=review.id) }}" method="POST">
-                    <label for="rating-{{ review.id }}">Rating:</label>
-                    <input type="number" id="rating-{{ review.id }}" name="rating" value="{{ review.rating }}" min="1" max="5" required>
 
-                    <label for="comment-{{ review.id }}">Comment:</label>
-                    <textarea id="comment-{{ review.id }}" name="comment" required>{{ review.comment }}</textarea>
 
-                    <button type="submit" class="btn yellow">Update</button>
-                  </form>
+          {% elif user_type == 'tenant' %}
+              <!-- Tenant's   Reviews Section -->
+              <h6>Your Reviews</h6>
+              <div class="scrollable-container">
+                {% if user_reviews %}
+                  <ul class="collection">
+                    {% for review in user_reviews %}
+                      <li class="collection-item">
+                        <strong>Apartment:</strong> {{ review.apartment.title }}<br>
 
-                  <!-- Delete Form -->
-                  <form action="{{ url_for('review_views.delete_review_route', review_id=review.id) }}" method="POST" style="margin-top: 5px;">
-                    <button type="submit" class="btn red">Delete</button>
-                  </form>
-                </li>
-              {% endfor %}
-            </ul>
+                        <!-- Edit Form -->
+                        <form action="{{ url_for('review_views.edit_review', review_id=review.id) }}" method="POST">
+                          <label for="rating-{{ review.id }}">Rating:</label>
+                          <input type="number" id="rating-{{ review.id }}" name="rating" value="{{ review.rating }}" min="1" max="5" required>
+
+                          <label for="comment-{{ review.id }}">Comment:</label>
+                          <textarea id="comment-{{ review.id }}" name="comment" required>{{ review.comment }}</textarea>
+
+                          <button type="submit" class="btn yellow">Update</button>
+                        </form>
+
+                        <!-- Delete Form -->
+                        <form action="{{ url_for('review_views.delete_review_route', review_id=review.id) }}" method="POST" style="margin-top: 5px;">
+                          <button type="submit" class="btn red">Delete</button>
+                        </form>
+                      </li>
+                    {% endfor %}
+
+                  </ul>
+                {% else %}
+                  <p>You haven't left any reviews yet.</p>
+                {% endif %}
+              </div> <!--end div for tenant's reviews add/edit scrollable -->
+
+            {% endif %}
+
+
+
           {% else %}
-            <p>You haven't left any reviews yet.</p>
-          {% endif %}
+            <p>Please log in to leave a review or manage listings.</p>
+          {% endif %} <!--end if for landlord-->
         </div>
-      {% endif %}
-    {% else %}
-      <p>Please log in to leave a review or manage listings.</p>
-    {% endif %}
+   </div>
   </div>
-</div>
 
 
 
@@ -185,29 +212,29 @@
         </div>
   </form>
 
-  <h5>Search Results </h5>
+  <!-- <h5>Search Results </h5>
   </div>
 
-
-
-    <section class="col s12 m12 l12" style="overflow-y:scroll; height: 50vh">
-      <div class="row">
-
+    
           {% if found %}
+          <section class="col s12 m12 l12" style="overflow-y:scroll; height: 50vh">
+            <div class="row">
+      
             {% for apartment in found %}
             <div class="col s12 m3 l4">
               <div class="card" style="font-size:medium">
                 <h6>{{ apartment.title }}</h6>
                 <p>{{ apartment.cityname }} - {{apartment.amenities}}</p>
-                <!-- <img src="{{apartment.photo_url}}" alt="Apartment Photo" width="600px" height="450px"> -->
+               
             </div>
           </div>
             {% endfor %}
+           </div>
+         </section> 
           {% else %}
               <p style="text-align: center; background-color:rgb(255, 205, 205) ; font-family:Georgia; font-size:large " >No apartments found matching your search.</p>
           {% endif %}
-      </div>
-    </section>
+     -->
   
 
 
