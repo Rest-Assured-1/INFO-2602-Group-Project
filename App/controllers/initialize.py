@@ -1,6 +1,7 @@
 from .user import create_user, create_landlord, create_tenant
-from App.models import Apartment, Landlord
+from App.models import Apartment, Landlord, Tenant
 from App.database import db
+from App.controllers.review import create_review
 import csv
 
 
@@ -57,22 +58,15 @@ def initialize():
                             pets_allowed=pets,
                         )
                         db.session.add(apartment)
+                        for tenant in db.session.query(Tenant).all():
+                            if tenant.username == 'tony':
+                                review = create_review(apartment.id, 5, 'Great place!', tenant.id)
+                            if tenant.username == 'tina':
+                                review = create_review(apartment.id, 2, 'Not up to my standards.', tenant.id)
+                            db.session.add(review)
                         break
-                    
-
-                # apartment = Apartment(
-                #     title=row['title'],
-                #     body=row['body'],
-                #     amenities=am,
-                #     photo=row.get('photo', None),
-                #     pets_allowed=pets,
-                #     price=float(row['price']),
-                #     address=add,
-                #     cityname=row['cityname'],
-                #     landlord_id=int(row['landlord_id'])  # or however you map landlord
-                    
-                # )
-                # db.session.add(apartment)
+                
+                
             except Exception as e:
                 print(f"Skipping row due to error: {e}")
     db.session.commit()
