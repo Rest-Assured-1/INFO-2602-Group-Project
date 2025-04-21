@@ -64,8 +64,8 @@ def edit_apartment(id):
             form_data['photo']=upload.filename # filename is an existing function 
 
         else:
-            form_data['photo']='file not uploaded in edit' # to be safe
-        
+            form_data['photo'] = apartment.photo    # this prevents the upload from being overwritten by nothing when editing 
+
         update_apartment(id, form_data)
         flash('Apartment updated successfully!')
         return redirect(url_for('index_views.index_page'))

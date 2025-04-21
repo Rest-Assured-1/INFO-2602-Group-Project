@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>{% block title %}{% endblock %}</title>
+    <title>
+      {% block title %}  
+      
+        STAYS
+      
+      {% endblock %}
+    </title>
 
   </head>
   <body>
@@ -17,9 +23,9 @@
       <nav class="blue darken-3"  style=" font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
           <div class="nav-wrapper">
               <a href="#!" class="brand-logo center">{% block page %}{% endblock %}</a>
-              <ul id="nav-mobile" class="left">
+              <!-- <ul id="nav-mobile" class="left">
                   <li><a href="/app">Home</a></li>
-                </ul>
+                </ul> -->
                   <!-- <li><a href="/users">Users Jinja</a></li>
                   {% if is_authenticated %}
                     <li><a href="/identify">Identify</a></li>
