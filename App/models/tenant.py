@@ -1,6 +1,7 @@
 from .user import User
 from App.database import db
 
+
 class Tenant(User):
     __tablename__ = 'tenant'
 
@@ -9,6 +10,7 @@ class Tenant(User):
     __mapper_args__ = {
         'polymorphic_identity': 'tenant',
     }
+
 
     def __init__(self, username, password):
         super().__init__(username, password)

@@ -6,17 +6,17 @@ from App.controllers.apartment import search_apartment
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
+
+# Route for the index page
 @index_views.route('/app', endpoint='index_page')
 def home():
     user_id = session.get('user_id')
     user_type = session.get('user_type')
 
     if not user_id or not user_type:
-        return redirect('/')  # redirect to login if not authenticated
-
+        return redirect('/')  
     
-    
-    apartments = Apartment.query.all()  # for the main list in column 1
+    apartments = Apartment.query.all() 
 
     user_apartments = []
     user_reviews = []
@@ -41,15 +41,14 @@ def home():
     )
  
 
-
-
-
-
+ #Route to initialize the database
 @index_views.route('/init', methods=['GET'])
 def init():
     initialize()
     return jsonify(message='db initialized!')
 
+
+#Route to check health of the application
 @index_views.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status':'healthy'})

@@ -2,6 +2,8 @@ from App.models import Apartment
 from App.database import db
 from flask import url_for
 
+
+# Function to create a new apartment listing
 def create_apartment(data, landlord_id):
     apartment = Apartment(
         title=data.get('title'),
@@ -18,12 +20,18 @@ def create_apartment(data, landlord_id):
     db.session.commit()
     return apartment
 
+
+# Function to get all apartments
 def get_all_apartments():
     return Apartment.query.all()
 
+
+# Function to get apartments by apartment ID
 def get_apartment_by_id(apartment_id):
     return Apartment.query.get(apartment_id)
 
+
+# Function to update apartment details
 def update_apartment(apartment_id, data):
     apartment = get_apartment_by_id(apartment_id)
     if not apartment:
@@ -39,6 +47,8 @@ def update_apartment(apartment_id, data):
     db.session.commit()
     return apartment
 
+
+# Function to delete an apartment listing
 def delete_apartment(apartment_id):
     apartment = get_apartment_by_id(apartment_id)
     if not apartment:
@@ -47,6 +57,8 @@ def delete_apartment(apartment_id):
     db.session.commit()
     return True
 
+
+# Function to get search apartment by amenities or city name
 def search_apartment(data):
     value=data.get('value','').lower()
     apartments=None

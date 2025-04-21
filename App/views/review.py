@@ -12,15 +12,7 @@ from App.models import Apartment, Review
 review_views = Blueprint('review_views', __name__, template_folder='../templates')
 
 
-# @review_views.route('/apartments/<int:apartment_id>/reviews', methods=['GET'])
-# @jwt_required()
-# def view_reviews(apartment_id):
-#     apartment = Apartment.query.get_or_404(apartment_id)
-#     reviews = get_reviews_for_apartment(apartment_id)
-#     return render_template('view_reviews.html', apartment=apartment, reviews=reviews)
-
-
-
+#Route to add a review to an apartment
 @review_views.route('/apartments/<int:apartment_id>/reviews/add', methods=['GET', 'POST'])
 @jwt_required()
 def add_review(apartment_id):
@@ -41,6 +33,7 @@ def add_review(apartment_id):
     return redirect(url_for('apartment_views.show_apartments', id=apartment_id))
 
 
+#Route to edit a review for an apartment
 @review_views.route('/reviews/<int:review_id>/edit', methods=['GET', 'POST'])
 @jwt_required()
 def edit_review(review_id):
@@ -59,6 +52,7 @@ def edit_review(review_id):
     return redirect(url_for('apartment_views.show_apartments', id=review.apartment_id))
 
 
+#Route to delete a review for an apartment
 @review_views.route('/reviews/<int:review_id>/delete', methods=['POST'])
 @jwt_required()
 def delete_review_route(review_id):

@@ -1,18 +1,16 @@
 from App.database import db
 from flask import url_for
 
+
 class Apartment(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     body = db.Column(db.Text)
     amenities = db.Column(db.String(200), nullable=True)
-
     photo = db.Column(db.String(200), nullable=True)
     pets_allowed = db.Column(db.String(50), nullable=True)
-
     price = db.Column(db.Float)
-
     address = db.Column(db.String(200))
     cityname = db.Column(db.String(100))
    
@@ -20,8 +18,10 @@ class Apartment(db.Model):
 
     landlord = db.relationship('Landlord', backref=db.backref('apartments', lazy='joined'))
 
+
     def __repr__(self):
         return f'<Apartment {self.id} {self.title}>'
+
 
     def toJSON(self):
         return {
@@ -37,7 +37,7 @@ class Apartment(db.Model):
             'landlord_id': self.landlord_id
         }
 
-    @property # placing this here avoids having to write a view for this and it also requires the field directly 
+    @property
     def photo_url(self):
         if self.photo and (self.photo.startswith('http') or self.photo.startswith('https')):
             return self.photo

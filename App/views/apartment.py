@@ -15,7 +15,7 @@ from App.controllers.apartment import (
 
 apartment_views = Blueprint('apartment_views', __name__, template_folder='../templates')
 
-# CREATE Apartment
+#Route to add a new apartment
 @apartment_views.route('/apartments/new', methods=['GET', 'POST'])
 @jwt_required()
 def new_apartment():
@@ -24,7 +24,6 @@ def new_apartment():
         form_data = request.form.to_dict()
         photo_file = request.files.get('photo')
 
-        # Handle file upload
         if photo_file and photo_file.filename:
             upload = Upload(photo_file)
             db.session.add(upload)
@@ -37,7 +36,7 @@ def new_apartment():
         return redirect(url_for('index_views.index_page'))
 
 
-# UPDATE Apartment
+#Route to edit an apartment
 @apartment_views.route('/apartments/<int:id>/edit', methods=['GET', 'POST'])
 @jwt_required()
 def edit_apartment(id):
@@ -54,23 +53,23 @@ def edit_apartment(id):
 
             if apartment.photo and apartment.photo != 'Image not available':
                 try:
-                   remove_file(apartment.photo) # function defined in upload controller
+                   remove_file(apartment.photo)
                 except:
                     print('Could not delete old photo')
 
             upload=Upload(photo_file)
             db.session.add(upload)
-            form_data['photo']=upload.filename # filename is an existing function 
+            form_data['photo']=upload.filename 
 
         else:
-            form_data['photo'] = apartment.photo    # this prevents the upload from being overwritten by nothing when editing 
+            form_data['photo'] = apartment.photo 
 
         update_apartment(id, form_data)
         flash('Apartment updated successfully!')
         return redirect(url_for('index_views.index_page'))
 
 
-# DELETE Apartment
+#Route to delete an apartment
 @apartment_views.route('/apartments/<int:id>/delete', methods=['POST'])
 @jwt_required()
 def delete_apartment_route(id):
@@ -85,7 +84,8 @@ def delete_apartment_route(id):
         flash('Apartment not found.')
     return redirect(url_for('index_views.index_page'))
 
-#SEARCH BY LOCATION OR AMENITIES 
+
+#Route to search for amenities or city location
 @apartment_views.route('/apartments/search' , methods=['GET'])
 @jwt_required()
 def search_apartment_route():
@@ -97,32 +97,12 @@ def search_apartment_route():
       
       return render_template('index.html',found=found)
 
-# @apartment_views.route('/apartments/<int:id>', methods=['GET'])
-# @jwt_required()
-# def show_apartments(id):
-#     apartments = Apartment.query.all()
 
-#     selected_apartment = get_apartment_by_id(id)
-#     print("selected_id:",id)
-#     #selected_apartment = Apartment.query.get(selected_id) if selected_id else None
-
-#     reviews = []
-#     if selected_apartment:
-#         reviews = Review.query.filter_by(apartment_id=selected_apartment.id).all()
-
-#     return render_template(
-#         'index.html',
-#         apartments=apartments,
-#         selected_apartment=selected_apartment,
-#         reviews=reviews,
-#         user_id=session.get('user_id'),
-#         user_type=session.get('user_type')
-#     )
+#Route to show all apartments
 @apartment_views.route('/apartments/<int:id>', methods=['GET'])
 @jwt_required()
 def show_apartments(id):
     apartments = Apartment.query.all()
-
 
     selected_apartment = get_apartment_by_id(id)
     print("selected_id:", id)
@@ -131,7 +111,6 @@ def show_apartments(id):
     if selected_apartment:
         reviews = Review.query.filter_by(apartment_id=selected_apartment.id).all()
 
-   
     user_reviews = []
     if session.get('user_id') and session.get('user_type') == 'tenant':
         user_reviews = Review.query.filter_by(tenant_id=session.get('user_id')).all()

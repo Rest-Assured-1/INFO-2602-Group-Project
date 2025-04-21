@@ -6,14 +6,14 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=False)
     apartment_id = db.Column(db.Integer, db.ForeignKey('apartment.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
 
     tenant = db.relationship('Tenant', backref='reviews', lazy='joined')
     apartment = db.relationship('Apartment', backref=db.backref('reviews', lazy='joined'))
+
 
     def __init__(self, tenant_id, apartment_id, rating, comment=None):
         self.tenant_id = tenant_id
@@ -21,8 +21,10 @@ class Review(db.Model):
         self.rating = rating
         self.comment = comment
 
+
     def __repr__(self):
         return f'<Review {self.id} {self.rating} by Tenant {self.tenant_id} for Apartment {self.apartment_id}>'
+
 
     def toJSON(self):
         return {

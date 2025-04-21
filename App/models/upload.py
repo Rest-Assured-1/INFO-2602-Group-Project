@@ -1,9 +1,7 @@
 from App.database import db
 from .apartment import Apartment
 from .user import User
-
 from App.controllers.upload import store_file, remove_file
-
 
 
 class Upload(db.Model):

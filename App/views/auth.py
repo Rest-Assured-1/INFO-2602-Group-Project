@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, jsonify, request, flash, redirect, url_for, session
 from flask_jwt_extended import jwt_required, current_user, unset_jwt_cookies, set_access_cookies
-
 from App.controllers import login
 from App.models import User, Tenant, Landlord
 from App.database import db
@@ -20,6 +19,7 @@ def identify_page():
     return render_template('message.html', title="Identify", message=f"You are logged in as {current_user.id} - {current_user.username}")
 
 
+#Route to login
 @auth_views.route('/', methods=['GET', 'POST'])
 def login_action():
     if request.method == 'GET':
@@ -39,16 +39,15 @@ def login_action():
         flash('Login Successful')
         set_access_cookies(response, token)
 
-        # ✅ Instead of current_user, directly look up user by username
         user = User.query.filter_by(username=username).first()
         if user:
-            session['user_id'] = user.id  # Now safe to use
+            session['user_id'] = user.id 
             session['user_type'] = user.user_type
 
     return response
 
 
-
+#Route to signup
 @auth_views.route('/signup', methods=['GET', 'POST'])
 def signup_action():
     if request.method == 'GET':
@@ -77,6 +76,7 @@ def signup_action():
     return redirect(url_for('auth_views.login_action'))
 
 
+#Route to logout
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
     response = redirect(url_for('auth_views.login_action'))

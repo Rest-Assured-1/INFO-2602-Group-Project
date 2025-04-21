@@ -2,6 +2,7 @@ from .user import User
 from App.database import db
 from .apartment import Apartment
 
+
 class Landlord(User):
     __tablename__ = 'landlord'
 
@@ -11,11 +12,14 @@ class Landlord(User):
         'polymorphic_identity': 'landlord',
     }
 
+
     def __init__(self, username, password):
         super().__init__(username, password)
 
+
     def __repr__(self):
         return f'<Landlord {self.id} {self.username}>'
+
 
     def create_apartment(self, title, body, price, address, photo, city, amenities, pets_allowed):
         try:
@@ -38,6 +42,7 @@ class Landlord(User):
             db.session.rollback()
             return None
 
+
     def delete_apartment(self, apartment):
         try:
             apartment.status = 'delisted'
@@ -47,6 +52,7 @@ class Landlord(User):
             print('Error deleting apartment:', e)
             db.session.rollback()
             return False
+
 
     def update_apartment(self, apartment, title=None, body=None, price=None, address=None, city=None, amenities=None, pets_allowed=None):
         try:
@@ -71,6 +77,7 @@ class Landlord(User):
             print('Error updating apartment:', e)
             db.session.rollback()
             return None
+
 
     def toJSON(self):
         return {

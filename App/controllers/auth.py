@@ -1,10 +1,11 @@
 from flask_jwt_extended import create_access_token, jwt_required, JWTManager, get_jwt_identity, verify_jwt_in_request
-
 from App.models import User
 from App.models import db
 from App.models.landlord import Landlord
 from App.models.tenant import Tenant
 
+
+#Function to register a new user
 def register_user(username, password, user_type):
     if User.query.filter_by(username=username).first():
         return None
@@ -14,42 +15,42 @@ def register_user(username, password, user_type):
     elif user_type == 'tenant':
         user = Tenant(username=username, password=password)
     else:
-        user = User(username=username, password=password)  # regular user
+        user = User(username=username, password=password)
 
     db.session.add(user)
     db.session.commit()
     return user
 
+
+#Function to login a user
 def login(username, password):
   user = User.query.filter_by(username=username).first()
   if user and user.check_password(password):
-    print("username", type(username)) # here
+    print("username", type(username))
     return create_access_token(identity=username)
   return None
 
 
 def setup_jwt(app):
   jwt = JWTManager(app)
-
-  # # configure's flask jwt to resolve get_current_identity() to the corresponding user's ID
   @jwt.user_identity_loader
   def user_identity_lookup(identity):
     user = User.query.filter_by(username=identity).one_or_none()
     if user:
-        print("id type",type(user.id)) # here 
+        print("id type",type(user.id))
         return str(user.id)
     return None
+
 
   @jwt.user_lookup_loader
   def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
-    print("type",type(identity)) # not getting to here
+    print("type",type(identity))
     return User.query.get(identity)
 
   return jwt
 
 
-# Context processor to make 'is_authenticated' available to all templates
 def add_auth_context(app):
   @app.context_processor
   def inject_user():
