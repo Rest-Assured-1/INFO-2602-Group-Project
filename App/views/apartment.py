@@ -36,7 +36,6 @@ def new_apartment():
         flash('Apartment added successfully!')
         return redirect(url_for('index_views.index_page'))
 
-    return render_template('add_apartment.html')
 
 # UPDATE Apartment
 @apartment_views.route('/apartments/<int:id>/edit', methods=['GET', 'POST'])
@@ -70,7 +69,6 @@ def edit_apartment(id):
         flash('Apartment updated successfully!')
         return redirect(url_for('index_views.index_page'))
 
-    return render_template('edit_apartment.html', apartment=apartment)
 
 # DELETE Apartment
 @apartment_views.route('/apartments/<int:id>/delete', methods=['POST'])
@@ -87,7 +85,7 @@ def delete_apartment_route(id):
         flash('Apartment not found.')
     return redirect(url_for('index_views.index_page'))
 
-#SEARCH BY LOCATION OR AMENITIES * testing 
+#SEARCH BY LOCATION OR AMENITIES 
 @apartment_views.route('/apartments/search' , methods=['GET'])
 @jwt_required()
 def search_apartment_route():

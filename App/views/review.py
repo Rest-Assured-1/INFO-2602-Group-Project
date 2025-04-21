@@ -12,12 +12,12 @@ from App.models import Apartment, Review
 review_views = Blueprint('review_views', __name__, template_folder='../templates')
 
 
-@review_views.route('/apartments/<int:apartment_id>/reviews', methods=['GET'])
-@jwt_required()
-def view_reviews(apartment_id):
-    apartment = Apartment.query.get_or_404(apartment_id)
-    reviews = get_reviews_for_apartment(apartment_id)
-    return render_template('view_reviews.html', apartment=apartment, reviews=reviews)
+# @review_views.route('/apartments/<int:apartment_id>/reviews', methods=['GET'])
+# @jwt_required()
+# def view_reviews(apartment_id):
+#     apartment = Apartment.query.get_or_404(apartment_id)
+#     reviews = get_reviews_for_apartment(apartment_id)
+#     return render_template('view_reviews.html', apartment=apartment, reviews=reviews)
 
 
 
